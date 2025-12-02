@@ -1,22 +1,27 @@
 const std = @import("std");
-const day_one = @import("days/one.zig");
-const day_two = @import("days/two.zig");
+const DayLocator = @import("DayLocator");
 
+// Run all days, or a specific day if a numeric argument is provided
 pub fn main() !void {
-    const day1_part1 = try day_one.Solution_Part_One();
-    std.debug.print("Solution to Day 1, Part 1: {d}\n", .{day1_part1});
+    var args = std.process.args();
+    _ = args.skip();
 
-    const day1_part2 = try day_one.Solution_Part_Two();
-    std.debug.print("Solution to Day 1, Part 2: {d}\n", .{day1_part2});
-
-    const day2_part1 = try day_two.Solution_Part_One();
-    std.debug.print("Solution to Day 2, Part 1: {d}\n", .{day2_part1});
-
-    const day2_part2 = try day_two.Solution_Part_Two();
-    std.debug.print("Solution to Day 2, Part 2: {d}\n", .{day2_part2});
+    if (args.next()) |arg| {
+        const day_num = std.fmt.parseInt(u8, arg, 10) catch {
+            std.log.err("Invalid argument: '{s}'. Expected a day number (1-25).", .{arg});
+            return;
+        };
+        if (day_num < 1 or day_num > 25) {
+            std.log.err("Day number out of range: {d}. Expected a value between 1 and 25.", .{day_num});
+            return;
+        }
+        try DayLocator.runDay(day_num);
+    } else {
+        try DayLocator.runAllDays();
+    }
 }
 
+// Run all day's tests
 test {
-    _ = day_one;
-    _ = day_two;
+    _ = DayLocator;
 }

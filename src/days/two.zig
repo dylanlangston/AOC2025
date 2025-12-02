@@ -1,5 +1,5 @@
 const std = @import("std");
-const root = @import("../root.zig");
+const root = @import("AOC2025");
 const math = std.math;
 const fmt = std.fmt;
 

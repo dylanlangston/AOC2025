@@ -1,5 +1,5 @@
 const std = @import("std");
-const root = @import("../root.zig");
+const root = @import("AOC2025");
 
 const examplePattern1 = "L68,L30,R48,L5,R60,L55,L1,L99,R14,L82";
 const examplePattern2 = "L50,R100";

@@ -1,4 +1,5 @@
 const std = @import("std");
+const day_discovery = @import("src/day_discovery.zig");
 
 // Although this function looks imperative, it does not perform the build
 // directly and instead it mutates the build graph (`b`) that will be then
@@ -6,7 +7,7 @@ const std = @import("std");
 // for defining build steps and express dependencies between them, allowing the
 // build runner to parallelize the build automatically (and the cache system to
 // know when a step doesn't need to be re-run).
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     // Standard target options allow the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
     // means any target is allowed, and the default is native. Other options
@@ -83,6 +84,12 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    // A top level step for running all tests
+    const test_step = b.step("test", "Run tests");
+
+    // Import all days using the day discovery module - pass test_step so day tests are added
+    const day_discovery_module = try day_discovery.importDays("days", "DayLocator", b, exe, test_step);
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden
@@ -135,12 +142,13 @@ pub fn build(b: *std.Build) void {
     // A run step that will run the second test executable.
     const run_exe_tests = b.addRunArtifact(exe_tests);
 
-    // A top level step for running all tests. dependOn can be called multiple
-    // times and since the two run steps do not depend on one another, this will
-    // make the two of them run in parallel.
-    const test_step = b.step("test", "Run tests");
+    // Add mod and exe tests to test step (day tests were added by importDays)
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
+
+    // Test the DayLocator module directly
+    const day_tests = b.addTest(.{ .root_module = day_discovery_module });
+    test_step.dependOn(&b.addRunArtifact(day_tests).step);
 
     // Just like flags, top level steps are also listed in the `--help` menu.
     //
