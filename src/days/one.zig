@@ -88,7 +88,7 @@ const Logic_Original = struct {
 
     pub const Result = struct { newPosition: u8, newLogic: Logic_Original };
 
-    pub fn calculate(self: Logic_Original, position: u8, rotation: Rotation) Result {
+    pub inline fn calculate(self: Logic_Original, position: u8, rotation: Rotation) Result {
         var currentPosition: u32 = position;
         var numberOfTimesLandedOnZero: u16 = self.numberOfTimesLandedOnZero;
 
@@ -119,14 +119,20 @@ test "Example Pattern Part 1" {
     var lock = try ComboLock_Method_One.init(50);
     lock = try lock.rotate_bulk(examplePattern1);
     const password = lock.logic.numberOfTimesLandedOnZero;
-    try std.testing.expect(password == 3);
+    try std.testing.expectEqual(
+        3,
+        password,
+    );
 }
 
 test "Minimal Example Pattern Part 1" {
     var lock = try ComboLock_Method_One.init(50);
     lock = try lock.rotate_bulk(examplePattern2);
     const password = lock.logic.numberOfTimesLandedOnZero;
-    try std.testing.expect(password == 2);
+    try std.testing.expectEqual(
+        2,
+        password,
+    );
 }
 
 pub fn Solution_Part_One() !u16 {
@@ -136,12 +142,20 @@ pub fn Solution_Part_One() !u16 {
     return password;
 }
 
+test "Solution Part One" {
+    const result = try Solution_Part_One();
+    try std.testing.expectEqual(
+        1074,
+        result,
+    );
+}
+
 const Logic_0x434C49434B = struct {
     numberOfTimesPassedZero: u32 = 0,
 
     pub const Result = struct { newPosition: u8, newLogic: Logic_0x434C49434B };
 
-    pub fn calculate(self: Logic_0x434C49434B, position: u8, rotation: Rotation) Result {
+    pub inline fn calculate(self: Logic_0x434C49434B, position: u8, rotation: Rotation) Result {
         var currentPosition: u32 = position;
         var numberOfTimesPassedZero: u32 = self.numberOfTimesPassedZero;
 
@@ -173,14 +187,20 @@ test "Example Pattern Part 2" {
     var lock = try ComboLock_Method_0x434C49434B.init(50);
     lock = try lock.rotate_bulk(examplePattern1);
     const password = lock.logic.numberOfTimesPassedZero;
-    try std.testing.expect(password == 6);
+    try std.testing.expectEqual(
+        6,
+        password,
+    );
 }
 
 test "Minimal Example Pattern Part 2" {
     var lock = try ComboLock_Method_0x434C49434B.init(50);
     lock = try lock.rotate_bulk(examplePattern2);
     const password = lock.logic.numberOfTimesPassedZero;
-    try std.testing.expect(password == 2);
+    try std.testing.expectEqual(
+        2,
+        password,
+    );
 }
 
 pub fn Solution_Part_Two() !u32 {
@@ -188,4 +208,12 @@ pub fn Solution_Part_Two() !u32 {
     lock = try lock.rotate_bulk(finalPattern);
     const password = lock.logic.numberOfTimesPassedZero;
     return password;
+}
+
+test "Solution Part Two" {
+    const result = try Solution_Part_Two();
+    try std.testing.expectEqual(
+        6254,
+        result,
+    );
 }
