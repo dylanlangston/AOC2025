@@ -1,5 +1,6 @@
 const std = @import("std");
 const day_discovery = @import("src/day_discovery.zig");
+const embed_input = @import("src/embed_input.zig");
 
 // Although this function looks imperative, it does not perform the build
 // directly and instead it mutates the build graph (`b`) that will be then
@@ -87,8 +88,11 @@ pub fn build(b: *std.Build) !void {
     // A top level step for running all tests
     const test_step = b.step("test", "Run tests");
 
+    // Embed input files as a module
+    _ = try embed_input.embedInputs(b, exe);
+
     // Import all days using the day discovery module - pass test_step so day tests are added
-    const day_discovery_module = try day_discovery.importDays("days", "DayLocator", b, exe, test_step);
+    _ = try day_discovery.importDays("days", "DayLocator", b, exe, test_step);
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
@@ -145,10 +149,6 @@ pub fn build(b: *std.Build) !void {
     // Add mod and exe tests to test step (day tests were added by importDays)
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
-
-    // Test the DayLocator module directly
-    const day_tests = b.addTest(.{ .root_module = day_discovery_module });
-    test_step.dependOn(&b.addRunArtifact(day_tests).step);
 
     // Just like flags, top level steps are also listed in the `--help` menu.
     //

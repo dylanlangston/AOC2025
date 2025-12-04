@@ -1,11 +1,13 @@
 const std = @import("std");
 const root = @import("AOC2025");
+const inputs = @import("input").Input;
 const math = std.math;
 const fmt = std.fmt;
+const solutions = root.Solutions;
 
 const examplePattern1 = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124";
 const examplePattern2 = "110-115,1210-1215,10-15"; // Part 1: 1212+11=1223, Part 2: 111+1212+11=1334
-const finalPattern = "2157315-2351307,9277418835-9277548385,4316210399-4316270469,5108-10166,872858020-872881548,537939-575851,712-1001,326613-416466,53866-90153,907856-1011878,145-267,806649-874324,6161532344-6161720341,1-19,543444404-543597493,35316486-35418695,20-38,84775309-84908167,197736-309460,112892-187377,336-552,4789179-4964962,726183-793532,595834-656619,1838-3473,3529-5102,48-84,92914229-92940627,65847714-65945664,64090783-64286175,419838-474093,85-113,34939-52753,14849-30381";
+const finalPattern = inputs.two.data();
 
 // Precomputed powers of 10 up to 10^19
 const Pow10 = root.PowersLookup(u64, 10, 20);
@@ -280,7 +282,7 @@ pub fn Solution_Part_One() !u64 {
 
 test "Solution Part One" {
     const result = try Solution_Part_One();
-    try std.testing.expectEqual(29818212493, result);
+    try std.testing.expectEqual(solutions.DayTwo.value(.PartOne), result);
 }
 
 const InvalidIdScanner_Rules_AtLeastTwice = InvalidIdScanner(struct {
@@ -306,5 +308,5 @@ pub fn Solution_Part_Two() !u64 {
 
 test "Solution Part Two" {
     const result = try Solution_Part_Two();
-    try std.testing.expectEqual(37432260594, result);
+    try std.testing.expectEqual(solutions.DayTwo.value(.PartTwo), result);
 }
