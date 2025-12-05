@@ -34,6 +34,10 @@ pub const Solutions = enum {
                 .PartOne => obf(59796447984),
                 .PartTwo => obf(169361977772099),
             },
+            .DayFour => switch (part) {
+                .PartOne => obf(59796432338),
+                .PartTwo => obf(59796423127),
+            },
             else => @panic("Solution value not defined for this day."),
         };
     }
