@@ -100,15 +100,16 @@ pub fn importDays(comptime days_path: [:0]const u8, comptime module_name: [:0]co
     try buf.appendSlice(a,
         \\const std = @import("std");
         \\const obf = @import("AOC2025").obf;
+        \\const obf_signed = @import("AOC2025").obf_signed;
         \\pub const Solution = union(enum) {
-        \\    number: u64, string: []const u8, not_implemented: void,
+        \\    number: u64, signedNumber: i128, string: []const u8, not_implemented: void,
         \\    pub fn format(self: Solution, writer: anytype) !void {
-        \\        switch (self) { .number => |n| try writer.print("{d} \x1b[2m(obf: {d})\x1b[0m", .{n, obf(n)}), .string => |s| try writer.print("{s}", .{s}), .not_implemented => try writer.print("Not implemented", .{}) }
+        \\        switch (self) { .number => |n| try writer.print("{d} \x1b[2m(obf: {d})\x1b[0m", .{n, obf(n)}), .signedNumber => |n| try writer.print("{d} \x1b[2m(obf: {d})\x1b[0m", .{n, obf_signed(n)}), .string => |s| try writer.print("{s}", .{s}), .not_implemented => try writer.print("Not implemented", .{}) }
         \\    }
         \\};
         \\inline fn toSolution(v: anytype) Solution {
         \\    const T = @TypeOf(v);
-        \\    return if (T == []const u8 or T == [:0]const u8 or @typeInfo(T) == .pointer) .{ .string = v } else .{ .number = @intCast(v) };
+        \\    return if (T == []const u8 or T == [:0]const u8 or @typeInfo(T) == .pointer) .{ .string = v } else if (T == u64) .{ .number = @intCast(v) } else .{ .signedNumber = @intCast(v) };
         \\}
         \\inline fn solvePart(comptime mod: type, comptime func_name: []const u8) anyerror!Solution {
         \\    if (@hasDecl(mod, func_name)) {

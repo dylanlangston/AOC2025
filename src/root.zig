@@ -48,6 +48,10 @@ pub inline fn obf(value: u64) u64 {
     const magic: u64 = 0xDEC_25_2025;
     return value ^ magic;
 }
+pub inline fn obf_signed(value: i128) i128 {
+    const magic: i128 = 0xDEC_25_2025;
+    return value ^ magic;
+}
 
 /// Comptime-generated lookup table for powers of a base value.
 /// Avoids exceeding comptime branch limits when using std.math.pow which uses loops internally.
